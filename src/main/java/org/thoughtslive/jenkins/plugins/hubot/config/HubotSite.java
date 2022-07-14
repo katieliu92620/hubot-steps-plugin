@@ -103,6 +103,10 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
 
   public static HubotSite get(final Job<?, ?> job, final TaskListener listener,
       final String siteName) {
+    LOGGER.info("HubotSite get parameters: ");
+    LOGGER.info("job: "+job.getName());
+    LOGGER.info("listener: "+listener.toString());
+    LOGGER.info("siteName: "+ siteName);
     HubotSite hubotSite = null;
     HubotSite defaultSite = null;
     ItemGroup parent = job.getParent();
@@ -145,6 +149,7 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
         } else {
           parent = null;
         }
+        LOGGER.info(hubotSite);
       }
       // Global Sites.
       if (hubotSite == null && defaultSite == null) {
@@ -165,10 +170,13 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
             }
           }
         }
+        LOGGER.info(hubotSite);
       }
     } catch (Exception e) {
       LOGGER.error("Unable to get hubot site", e);
     }
+
+    LOGGER.info(hubotSite);
 
     return hubotSite == null ? defaultSite : hubotSite;
   }
@@ -200,10 +208,24 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
         @QueryParameter String roomPrefix,
         @QueryParameter boolean useFolderName)
         throws IOException {
+      LOGGER.info("project parameter: "+project);
+      LOGGER.info("name parameter: "+name);
+      LOGGER.info("url parameter: "+url);
+      LOGGER.info("room parameter: "+room);
+      LOGGER.info("");
+
+
       url = Util.fixEmpty(url);
       name = Util.fixEmpty(name);
       room = Util.fixEmpty(room);
       roomPrefix = Util.fixEmpty(roomPrefix);
+
+      LOGGER.info("After Util.fixEmpty: ");
+      LOGGER.info("project parameter: "+project);
+      LOGGER.info("name parameter: "+name);
+      LOGGER.info("url parameter: "+url);
+      LOGGER.info("room parameter: "+room);
+      LOGGER.info("");
 
       if (roomPrefix == null) {
         roomPrefix = "";
@@ -216,9 +238,15 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
       String folderName;
       String folderUrl;
       Map extraData = new HashMap<String, String>();
-      extraData.put("JENKINS_URL", Jenkins.getInstance().getRootUrl());
+      LOGGER.info("extraData.put Jenkins URL value: ");
+      //LOGGER.info(Jenkins.getInstance().getRootUrl());
+
+
+      //extraData.put("JENKINS_URL", Jenkins.getInstance().getRootUrl());
+      extraData.put("JENKINS_URL", "http://localhost:9090");
 
       if (project instanceof AbstractFolder) {
+        LOGGER.info("project is instance of AbstractFolder");
         AbstractFolder folder = (AbstractFolder) project;
         folderName = folder.getName();
         folderUrl = folder.getAbsoluteUrl();
@@ -242,6 +270,7 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
       }
 
       if (useFolderName) {
+        LOGGER.info("Using folder name.");
         if (project instanceof AbstractFolder) {
           AbstractFolder folder = (AbstractFolder) project;
           room = roomPrefix + folder.getName();

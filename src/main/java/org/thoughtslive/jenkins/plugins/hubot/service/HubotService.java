@@ -51,6 +51,7 @@ public class HubotService {
         room = this.hubotSite.getRoomPrefix().trim() + this.hubotSite.getRoom().trim();
       } else {
         room = this.hubotSite.getRoom().trim();
+        LOGGER.info("Room name in sendMessage: "+room);
       }
 
       return parseResponse(hubotEndPoints.sendMessage(room, message).execute());
